@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servlet Assignments</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #111;
+        }
+
+        .container {
+            position: relative;
+            width: 850px;
+            height: 500px;
+            background: linear-gradient(135deg, #1a1a1a 50%, #b33927 50%);
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(255, 94, 87, 0.4);
+            border: 2px solid #ff5e57;
+            overflow: hidden;
+        }
+
+        .form-box {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px;
+            transition: .7s ease;
+            z-index: 1;
+        }
+
+        .form-box.login { left: 0; }
+        .form-box.register { right: 0; transform: translateX(100%); opacity: 0; filter: blur(10px); }
+
+        .container.active .login { transform: translateX(-100%); opacity: 0; filter: blur(10px); }
+        .container.active .register { transform: translateX(0); opacity: 1; filter: blur(0); }
+
+        h1 { font-size: 32px; color: hsl(192, 9%, 90%); margin-bottom: 20px; text-align: center; font-weight: 600; }
+
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin: 25px 0;
+            border-bottom: 2px solid #fff;
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #fff;
+            pointer-events: none;
+            transition: .3s ease;
+        }
+
+        .input-group input:focus~label,
+        .input-group input:valid~label {
+            top: -5px;
+            font-size: 13px;
+            color: #ff5e57;
+        }
+
+        .input-group input {
+            width: 100%;
+            height: 40px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: #fff;
+            padding: 0 35px 0 5px;
+        }
+
+
+        .input-group i {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #fff;
+        }
+
+        button {
+            width: 100%;
+            height: 45px;
+            background: #1a1a1a;
+            border: 2px solid #ff5e57;
+            outline: none;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #fff;
+            font-weight: 600;
+            transition: .3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #ff5e57;
+            box-shadow: 0 0 10px #ff5e57;
+        }
+
+        .switch-link {
+            font-size: 14px;
+            color: #fff;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .switch-link a {
+            color: #ff5e57;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .toggle-box {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .toggle-panel {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 40px;
+            text-align: center;
+            color: #fff;
+            transition: .7s ease;
+        }
+
+        .toggle-panel p { font-size: 14px; margin-top: 10px; color: #eee; }
+
+        .toggle-left { right: 0; }
+        .toggle-right { left: 0; transform: translateX(-100%); opacity: 0; }
+
+        .container.active .toggle-left { transform: translateX(100%); opacity: 0; }
+        .container.active .toggle-right { transform: translateX(0); opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="container">
+        <div class="form-box login">
+            <form action="LoginServlet" method="POST">
+                <h1>Login</h1>
+                <div class="input-group">
+                    <input type="text" name="username" required>
+                    <label>Username</label>
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" name="password" required>
+                    <label>Password</label>
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+                <button type="submit">Login</button>
+                <div class="switch-link">
+                    Want to see how redirect works? <a href="#" id="register-btn">Go Ahead</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-box register">
+            <form action="RedirectServlet" method="GET">
+                <h1>Search Redirect</h1>
+                <div class="input-group">
+                    <input type="text" name="query" required>
+                    <label>Enter Search Topic</label>
+                    <i class='bx bx-search-alt'></i>
+                </div>
+                <button type="submit">Google Search</button>
+                <div class="switch-link">
+                    Back to Login? <a href="#" id="login-btn">Back</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="toggle-box">
+            <div class="toggle-panel toggle-left">
+                <h1>Login-Servlet</h1>
+                <p>This part focuses on password length validation using POST parameters.</p>
+            </div>
+            <div class="toggle-panel toggle-right">
+                <h1>Servlet-Redirect</h1>
+                <p>This part focuses on using the sendRedirect method to external sites.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+        const registerBtn = document.getElementById('register-btn');
+        const loginBtn = document.getElementById('login-btn');
+
+        registerBtn.onclick = (e) => {
+            e.preventDefault();
+            container.classList.add('active');
+        }
+
+        loginBtn.onclick = (e) => {
+            e.preventDefault();
+            container.classList.remove('active');
+        }
+    </script>
+</body>
+</html>
