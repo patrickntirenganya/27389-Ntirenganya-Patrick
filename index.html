@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patrick Ntirenganya | IT Engineer Portfolio</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --text: #1e293b;
+      --card: #ffffff;
+      --primary: #0f172a;
+      --accent: #2563eb;
+      --gradient: linear-gradient(135deg, #0f172a, #2563eb);
+    }
+
+    body.dark {
+      --bg: #020617;
+      --text: #f1f5f9;
+      --card: rgba(30, 41, 59, 0.7);
+      --primary: #f8fafc;
+      --accent: #38bdf8;
+      --gradient: linear-gradient(135deg, #020617, #1e293b);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.4s ease;
+      line-height: 1.6;
+    }
+
+    /* --- Navigation --- */
+    nav {
+      position: fixed;
+      top: 0; width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 1rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    nav .logo { color: white; font-weight: 700; font-size: 1.2rem; }
+    nav .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 0.9rem;
+      transition: 0.3s;
+    }
+    nav .nav-links a:hover { color: var(--accent); }
+
+    /* --- Header / Hero --- */
+    header {
+      height: 85vh;
+      background: var(--gradient);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      padding: 20px;
+      clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+    }
+
+    .profile-pic {
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      border: 5px solid rgba(255,255,255,0.2);
+      margin-bottom: 20px;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+    .profile-pic:hover { transform: scale(1.05) rotate(5deg); }
+
+    header h1 { font-size: 3rem; margin-bottom: 10px; }
+    header p { font-size: 1.1rem; opacity: 0.9; max-width: 800px; }
+
+    /* --- Containers & Sections --- */
+    section { padding: 80px 10%; }
+    .section-title {
+      font-size: 2.2rem;
+      margin-bottom: 40px;
+      position: relative;
+      display: inline-block;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px; left: 0;
+      width: 50%; height: 4px;
+      background: var(--accent);
+    }
+
+    /* --- Modern Grid Layouts --- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: 0.4s;
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border-color: var(--accent);
+    }
+    .card i { font-size: 2.5rem; color: var(--accent); margin-bottom: 20px; }
+    .card h3 { margin-bottom: 15px; color: var(--accent); }
+
+    /* --- Buttons --- */
+    .btn {
+      padding: 12px 25px;
+      background: var(--accent);
+      color: white !important;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 600;
+      display: inline-block;
+      transition: 0.3s;
+      border: none;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .btn:hover {
+      background: white;
+      color: var(--accent) !important;
+      box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+    }
+
+    /* --- Dark Mode Toggle --- */
+    .theme-toggle {
+      background: none; border: none; color: white;
+      font-size: 1.5rem; cursor: pointer; margin-left: 20px;
+    }
+
+    /* --- Experience & Training --- */
+    .exp-item {
+      border-left: 3px solid var(--accent);
+      padding-left: 25px;
+      margin-bottom: 40px;
+      position: relative;
+    }
+    .exp-item::before {
+        content: '';
+        position: absolute;
+        left: -8px; top: 0;
+        width: 13px; height: 13px;
+        background: var(--accent);
+        border-radius: 50%;
+    }
+
+    /* --- Project Focus Styles --- */
+    .project-detail {
+        background: var(--card);
+        padding: 40px;
+        border-radius: 20px;
+        margin-top: 20px;
+        border-left: 10px solid var(--accent);
+    }
+    .tag {
+        display: inline-block;
+        padding: 5px 15px;
+        background: rgba(37, 99, 235, 0.1);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.8rem;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+
+    footer {
+      background: #020617; color: white;
+      padding: 50px 10%; text-align: center;
+    }
+
+    .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+
+  </style>
+</head>
+<body class="dark">
+
+<nav>
+  <div class="logo">PN.TECH</div>
+  <div class="nav-links">
+    <a href="#about">Profile</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#certificates">Certificates</a>
+    <a href="#contact">Contact</a>
+    <button class="theme-toggle" onclick="toggleMode()"><i id="theme-icon" class="fas fa-sun"></i></button>
+  </div>
+</nav>
+
+<header>
+  <img src="proofile.jpg" alt="Patrick" class="profile-pic" />
+  <h1>Patrick Ntirenganya</h1>
+  <p>IT Engineer | Networking & Communication Specialist | Software Engineer</p>
+  <br>
+  <div class="header-btns">
+    <a href="https://drive.google.com/file/d/1xnH5FOmnnMQhALCl81f1Zq7rII_WGwEB/view?usp=sharing" target="_blank" class="btn"><i class="fas fa-file-download"></i> Download CV</a>
+    <a href="#contact" class="btn" style="background:transparent; border: 2px solid white;">Contact Me</a>
+  </div>
+</header>
+
+<section id="about" class="reveal">
+  <h2 class="section-title">Professional Profile</h2>
+  <div class="card">
+    <p style="font-size: 1.15rem;">
+      I am <b>Patrick Ntirenganya</b> an aspiring Information Technology professional with a deep specialization in <b>Networking and Communication Systems</b>, backed by a strong foundation in <b>Software Engineering</b>. 
+      Throughout my career, I have successfully bridged the gap between robust network infrastructure and high-performance software solutions. 
+    </p>
+    <br>
+    <p>
+      My background is built on a series of professional internships and technical roles where I mastered 
+      Advanced Network Operations and Cybersecurity. Currently, I am expanding my technical repertoire 
+      by strengthening my knowledge in communication protocols and high-level programming. I am proficient in 
+      Java, JavaScript, Python, C, C++, and React, allowing me to build end-to-end secure, data-driven systems.
+    </p>
+  </div>
+</section>
+
+<section id="skills" class="reveal">
+  <h2 class="section-title">Technical Skills</h2>
+  <div class="grid">
+    <div class="card">
+      <i class="fas fa-network-wired"></i>
+      <h3>Networking & Systems</h3>
+      <p>OSI Model, TCP/IP, Subnetting, LAN/WAN Operations.</p>
+      <p>Advanced Network Operations, Linux System Administration, and Shell Scripting.</p>
+    </div>
+    <div class="card">
+      <i class="fas fa-laptop-code"></i>
+      <h3>Software Engineering</h3>
+      <p>Java, JavaScript, Python, C, C++, React.</p>
+      <p>Object-Oriented Programming (OOP), Data Structures, and Algorithmic problem solving.</p>
+    </div>
+    <div class="card">
+      <i class="fas fa-user-shield"></i>
+      <h3>Security & Tools</h3>
+      <p>Cybersecurity Fundamentals, Git, GitHub, VS Code.</p>
+      <p>Cloud infrastructure awareness and open network configuration.</p>
+    </div>
+  </div>
+</section>
+<section id="coding-profiles" class="reveal" style="background: rgba(0,0,0,0.02);">
+    <h2 class="section-title">Competitive Programming</h2>
+    <div class="grid">
+        <a href="https://leetcode.com/u/patrick-ntirenganya/" target="_blank" class="card" style="text-decoration:none; color:inherit;">
+            <i class="fas fa-code"></i>
+            <h3>LeetCode</h3>
+            <p>Solving complex data structures and algorithmic challenges.</p>
+            <small>View Profile <i class="fas fa-external-link-alt"></i></small>
+        </a>
+        <a href="https://codeforces.com/profile/patrick-ntirenganya" target="_blank" class="card" style="text-decoration:none; color:inherit;">
+            <i class="fas fa-terminal"></i>
+            <h3>Codeforces</h3>
+            <p>Participating in competitive programming contests and problem solving.</p>
+            <small>View Profile <i class="fas fa-external-link-alt"></i></small>
+        </a>
+        <a href="https://github.com/patrickntirenganya" target="_blank" class="card" style="text-decoration:none; color:inherit;">
+            <i class="fab fa-github"></i>
+            <h3>GitHub</h3>
+            <p>Hosting open-source projects, system labs, and software repositories.</p>
+            <small>View Repositories <i class="fas fa-external-link-alt"></i></small>
+        </a>
+    </div>
+</section>
+
+<section id="projects" class="reveal">
+    <h2 class="section-title">Key Projects</h2>
+    
+    <div class="project-detail">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap;">
+            <h3>Smart Transit Rwanda — Executive Project</h3>
+            <span class="tag">Flagship Project</span>
+        </div>
+        <p><strong>Executive Summary:</strong> A nationwide digital platform designed to modernize Rwanda’s public transportation system through real-time tracking, data analytics, and user-centric mobile services.</p>
+        <br>
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px;">
+            <div>
+                <h4 style="color:var(--accent)">Passenger App</h4>
+                <p style="font-size:0.9rem">Real-time tracking, trip planning, and digital ticketing via mobile money/QR codes.</p>
+            </div>
+            <div>
+                <h4 style="color:var(--accent)">Agency Dashboard</h4>
+                <p style="font-size:0.9rem">Route planning, traffic insights, and fleet coordination tools for operators.</p>
+            </div>
+        </div>
+        <br>
+        <p><em>Aligns with Rwanda’s Vision 2050 to reduce commuter waiting times by 30% and optimize national mobility.</em></p>
+    </div>
+
+    <div class="grid" style="margin-top:30px;">
+        <div class="card">
+            <h3>Lost & Found System</h3>
+            <p>Full-stack PHP/MySQL platform for community reporting and item recovery.</p>
+        </div>
+        <div class="card">
+            <h3>Payroll System</h3>
+            <p>Efficient management tool developed in C++ focusing on data handling and performance.</p>
+        </div>
+    </div>
+</section>
+
+<section id="experience" class="reveal">
+  <h2 class="section-title">Training & Experience</h2>
+  <div class="exp-item">
+    <span class="tag">CURRENT</span>
+    <h3>G7 Africa (Silicon Valley Training)</h3>
+    <p>Attending rigorous technical training focusing on <strong>Advanced Data Structures and Algorithms</strong>.</p>
+  </div>
+  <div class="exp-item">
+    <h3>The GYM Software Training</h3>
+    <p>Intensive practical software development training and system architecture.</p>
+  </div>
+  <div class="exp-item">
+    <h3>Linux & Networking Labs</h3>
+    <p>Extensive practical labs covering server configuration, shell scripting, and network security.</p>
+  </div>
+</section>
+
+<section id="certificates" class="reveal" style="background: rgba(0,0,0,0.02);">
+  <h2 class="section-title">Professional Certifications</h2>
+  <div class="grid">
+    <div class="card">
+      <i class="fas fa-certificate"></i>
+      <h3>Networking TVET V</h3>
+      <p>Advanced certificate in professional Networking infrastructure.</p>
+      <a href="https://drive.google.com/file/d/1e0tvwvRfATd5MakyXFYfm7842d0gJfLu/view?usp=sharing" target="_blank" class="btn">View Certificate</a>
+    </div>
+    <div class="card">
+      <i class="fas fa-shield-alt"></i>
+      <h3>Network Operations</h3>
+      <p>Certified in Advanced and Introductory Network Operations.</p>
+      <div style="display:flex; flex-wrap:wrap;">
+        <a href="https://drive.google.com/file/d/1DAYEM2XoOy-oA6fAeVdPl5saDVl8hROC/view?usp=sharing" target="_blank" class="btn">Intro Cert</a>
+        <a href="https://drive.google.com/file/d/1WfNbR73SHJY2Nwssk536T6uigRrxMEJQ/view?usp=sharing" target="_blank" class="btn">Adv Cert</a>
+      </div>
+    </div>
+    <div class="card">
+      <i class="fas fa-graduation-cap"></i>
+      <h3>Academic Transcript</h3>
+      <p>Complete record of undergraduate performance and core courses.</p>
+      <a href="https://drive.google.com/file/d/1y6DbKKSd_Qs6zxjhpOldX8PaTCTcpsBR/view?usp=sharing" target="_blank" class="btn">View Transcript</a>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="reveal">
+  <h2 class="section-title">Contact</h2>
+  <div class="grid">
+    <div class="card" style="text-align: center;">
+      <i class="fas fa-phone"></i>
+      <p>+250 793301687</p>
+    </div>
+    <div class="card" style="text-align: center;">
+      <i class="fas fa-envelope"></i>
+      <p>patrickntirenganya110@gmail.com</p>
+    </div>
+    <div class="card" style="text-align: center;">
+      <i class="fab fa-linkedin"></i><br>
+      <a href="https://www.linkedin.com/in/patrick-ntirenganya-6225292b2/" target="_blank" class="btn">LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Patrick Ntirenganya | IT & Networking Systems Engineer</p>
+</footer>
+
+<script>
+  function toggleMode() {
+    const body = document.body;
+    const icon = document.getElementById('theme-icon');
+    body.classList.toggle('dark');
+    if(body.classList.contains('dark')) {
+      icon.className = 'fas fa-sun';
+    } else {
+      icon.className = 'fas fa-moon';
+    }
+  }
+
+  function reveal() {
+    var reveals = document.querySelectorAll(".reveal");
+    for (var i = 0; i < reveals.length; i++) {
+      var windowHeight = window.innerHeight;
+      var elementTop = reveals[i].getBoundingClientRect().top;
+      var elementVisible = 100;
+      if (elementTop < windowHeight - elementVisible) {
+        reveals[i].classList.add("active");
+      }
+    }
+  }
+  window.addEventListener("scroll", reveal);
+  reveal(); 
+</script>
+
+</body>
+</html>
