@@ -57,6 +57,31 @@ export default function Home() {
         />
 
         <section className="flex-1">
+          {/* Mobile Category Scroller */}
+          <div className="flex lg:hidden overflow-x-auto pb-4 gap-2 no-scrollbar mb-4 -mx-4 px-4">
+            <button 
+              onClick={() => setSelectedCategory(null)}
+              className={cn(
+                "whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold transition-all",
+                selectedCategory === null ? "bg-orange-500 text-white" : "bg-white dark:bg-slate-800 text-slate-600"
+              )}
+            >
+              {t.allProducts}
+            </button>
+            {categories.map(cat => (
+              <button 
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={cn(
+                  "whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold transition-all",
+                  selectedCategory === cat ? "bg-orange-500 text-white" : "bg-white dark:bg-slate-800 text-slate-600"
+                )}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
           {/* Header Controls */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
             <div>
