@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import productsData from '@/data/simba_products.json';
 import { Product } from '@/types';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import ProductCard from '@/components/ProductCard';
 import Cart from '@/components/Cart';
+import BottomNav from '@/components/BottomNav';
 import { useLanguage } from '@/hooks/useLanguage';
 import { SlidersHorizontal, Search, Sparkles, Zap, ShieldCheck, LayoutGrid } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -18,6 +19,7 @@ export default function Home() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [sortBy, setSortBy] = useState('popularity');
   const { t } = useLanguage();
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const products = productsData.products as Product[];
 
@@ -40,8 +42,16 @@ export default function Home() {
       });
   }, [products, search, selectedCategory, sortBy]);
 
+  const focusSearch = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+        const input = document.querySelector('input[type="text"]') as HTMLInputElement;
+        input?.focus();
+    }, 500);
+  };
+
   return (
-    <div className="min-h-screen flex flex-col selection:bg-orange-200">
+    <div className="min-h-screen flex flex-col selection:bg-orange-200 pb-20 lg:pb-0">
       <Navbar 
         search={search} 
         setSearch={setSearch} 
@@ -65,7 +75,6 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1 }}
               className="relative rounded-[2.5rem] overflow-hidden mb-12 min-h-[400px] flex flex-col justify-center border border-slate-200 dark:border-slate-800 shadow-2xl"
             >
-                {/* Background Image with Overlay */}
                 <div className="absolute inset-0 z-0">
                     <img 
                         src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1200" 
@@ -76,15 +85,6 @@ export default function Home() {
                 </div>
 
                 <div className="relative z-10 max-w-xl px-8 md:px-12 py-12 text-white">
-                    <motion.span 
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500 text-white text-[10px] font-black mb-6 shadow-lg shadow-orange-500/40 uppercase tracking-widest"
-                    >
-                        <Sparkles className="w-3 h-3" />
-                        A2SV GENAI CONTEST
-                    </motion.span>
                     <motion.h2 
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -172,12 +172,10 @@ export default function Home() {
                     : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700"
                 )}
               >
-                {/* Reusing icons from Sidebar logic would be better but let's keep it simple for now or import the icon helper */}
                 {cat}
               </button>
             ))}
           </div>
-
 
           {/* Header Controls */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
@@ -244,6 +242,11 @@ export default function Home() {
       <Cart 
         isOpen={isCartOpen} 
         onClose={() => setIsCartOpen(false)} 
+      />
+
+      <BottomNav 
+        onCartClick={() => setIsCartOpen(true)} 
+        onSearchClick={focusSearch} 
       />
 
       <footer className="bg-slate-900 text-white py-20 mt-20">

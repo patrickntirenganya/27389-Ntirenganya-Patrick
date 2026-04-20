@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ShoppingBasket, Search, ShoppingCart, Globe, Moon, Sun, User } from 'lucide-react';
+import { ShoppingBasket, Search, ShoppingCart, Globe, Moon, Sun, User, MapPin, ChevronDown } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useLanguage, Language } from '@/hooks/useLanguage';
 import { useTheme } from 'next-themes';
@@ -22,16 +22,32 @@ const Navbar: React.FC<NavbarProps> = ({ search, setSearch, onCartClick }) => {
     <nav className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50 transition-colors">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
         
-        {/* Logo */}
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.location.href = '/'}>
-          <div className="bg-orange-500 p-1.5 rounded-lg shadow-sm shadow-orange-200">
-            <ShoppingBasket className="text-white w-6 h-6" />
+        {/* Logo & Address */}
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.location.href = '/'}>
+            <div className="bg-orange-500 p-1.5 rounded-lg shadow-sm shadow-orange-200">
+              <ShoppingBasket className="text-white w-6 h-6" />
+            </div>
+            <h1 className="text-2xl font-black tracking-tight text-slate-800 dark:text-white hidden md:block">SIMBA</h1>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-800 dark:text-white hidden sm:block">SIMBA</h1>
+
+          {/* Address Selector (Getir Style) */}
+          <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-700 cursor-pointer hover:border-orange-500 transition-all group">
+            <div className="bg-white dark:bg-slate-800 p-1.5 rounded-lg shadow-sm">
+                <MapPin className="w-4 h-4 text-orange-500" />
+            </div>
+            <div className="flex flex-col">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Deliver to</span>
+                <div className="flex items-center gap-1">
+                    <span className="text-xs font-bold dark:text-white">Kigali, Rwanda</span>
+                    <ChevronDown className="w-3 h-3 text-orange-500 group-hover:translate-y-0.5 transition-transform" />
+                </div>
+            </div>
+          </div>
         </div>
 
         {/* Search */}
-        <div className="flex-1 max-w-xl relative">
+        <div className="flex-1 max-w-md relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
           <input 
             type="text" 
