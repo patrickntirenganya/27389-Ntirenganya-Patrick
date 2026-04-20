@@ -8,7 +8,7 @@ import Sidebar from '@/components/Sidebar';
 import ProductCard from '@/components/ProductCard';
 import Cart from '@/components/Cart';
 import { useLanguage } from '@/hooks/useLanguage';
-import { SlidersHorizontal, Search, Sparkles, Zap, ShieldCheck } from 'lucide-react';
+import { SlidersHorizontal, Search, Sparkles, Zap, ShieldCheck, LayoutGrid } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -63,36 +63,52 @@ export default function Home() {
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="relative rounded-[2.5rem] overflow-hidden mb-12 bg-slate-900 text-white p-8 md:p-12 min-h-[300px] flex flex-col justify-center"
+              className="relative rounded-[2.5rem] overflow-hidden mb-12 min-h-[400px] flex flex-col justify-center border border-slate-200 dark:border-slate-800 shadow-2xl"
             >
-                <div className="relative z-10 max-w-lg">
-                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/20 text-orange-500 text-xs font-bold mb-6 border border-orange-500/30">
-                        <Sparkles className="w-3 h-3" />
-                        Weekend Special Offer
-                    </span>
-                    <h2 className="text-4xl md:text-5xl font-black mb-4 leading-tight tracking-tight">
-                        Freshness <br/>Delivered to <span className="text-orange-500">Your Door.</span>
-                    </h2>
-                    <p className="text-slate-400 text-lg mb-8 font-medium">
-                        Shop Rwanda's best groceries, electronics, and daily essentials with instant MoMo checkout.
-                    </p>
-                    <div className="flex gap-4">
-                        <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-2xl font-bold transition-all transform active:scale-95 shadow-lg shadow-orange-500/20">
-                            Shop Now
-                        </button>
-                        <button className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-6 py-3 rounded-2xl font-bold transition-all transform active:scale-95">
-                            Learn More
-                        </button>
-                    </div>
+                {/* Background Image with Overlay */}
+                <div className="absolute inset-0 z-0">
+                    <img 
+                        src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1200" 
+                        alt="Supermarket Background"
+                        className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
                 </div>
 
-                {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-1/2 h-full hidden md:block">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-orange-500 rounded-full blur-[120px] opacity-20 animate-pulse"></div>
-                    <div className="absolute bottom-10 right-10 flex gap-4">
-                        {[1, 2, 3].map(i => (
-                             <div key={i} className="w-24 h-32 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 rotate-[15deg]"></div>
-                        ))}
+                <div className="relative z-10 max-w-xl px-8 md:px-12 py-12 text-white">
+                    <motion.span 
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500 text-white text-[10px] font-black mb-6 shadow-lg shadow-orange-500/40 uppercase tracking-widest"
+                    >
+                        <Sparkles className="w-3 h-3" />
+                        A2SV GENAI CONTEST
+                    </motion.span>
+                    <motion.h2 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-4xl md:text-6xl font-black mb-6 leading-[1.1] tracking-tight text-white drop-shadow-sm"
+                    >
+                        Freshness <br/>Delivered to <br/><span className="text-orange-500">Your Door.</span>
+                    </motion.h2>
+                    <motion.p 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                        className="text-slate-200 text-lg md:text-xl mb-10 font-medium leading-relaxed max-w-md"
+                    >
+                        Shop Rwanda's best groceries, electronics, and daily essentials with instant MoMo checkout.
+                    </motion.p>
+                    <div className="flex flex-wrap gap-4">
+                        <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-2xl font-black transition-all transform active:scale-95 shadow-xl shadow-orange-500/30 flex items-center gap-2 group">
+                            Start Shopping
+                            <Zap className="w-4 h-4 fill-current group-hover:animate-pulse" />
+                        </button>
+                        <button className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-8 py-4 rounded-2xl font-black transition-all transform active:scale-95 border border-white/20">
+                            Our Stores
+                        </button>
                     </div>
                 </div>
             </motion.div>
@@ -132,14 +148,17 @@ export default function Home() {
           )}
 
           {/* Mobile Category Scroller */}
-          <div className="flex lg:hidden overflow-x-auto pb-4 gap-2 no-scrollbar mb-4 -mx-4 px-4">
+          <div className="flex lg:hidden overflow-x-auto pb-4 gap-3 no-scrollbar mb-6 -mx-4 px-4 scroll-smooth">
             <button 
               onClick={() => setSelectedCategory(null)}
               className={cn(
-                "whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm",
-                selectedCategory === null ? "bg-orange-500 text-white shadow-orange-200" : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                "whitespace-nowrap px-6 py-3 rounded-2xl text-sm font-black transition-all flex items-center gap-2 shadow-lg",
+                selectedCategory === null 
+                  ? "bg-slate-900 text-white shadow-slate-200 dark:shadow-none" 
+                  : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700"
               )}
             >
+              <LayoutGrid className="w-4 h-4" />
               {t.allProducts}
             </button>
             {categories.map(cat => (
@@ -147,14 +166,18 @@ export default function Home() {
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
                 className={cn(
-                  "whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm",
-                  selectedCategory === cat ? "bg-orange-500 text-white shadow-orange-200" : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                  "whitespace-nowrap px-6 py-3 rounded-2xl text-sm font-black transition-all flex items-center gap-2 shadow-lg",
+                  selectedCategory === cat 
+                    ? "bg-orange-500 text-white shadow-orange-200" 
+                    : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700"
                 )}
               >
+                {/* Reusing icons from Sidebar logic would be better but let's keep it simple for now or import the icon helper */}
                 {cat}
               </button>
             ))}
           </div>
+
 
           {/* Header Controls */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
