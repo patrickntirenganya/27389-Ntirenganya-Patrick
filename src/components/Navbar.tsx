@@ -1,22 +1,25 @@
 'use client';
 
-import React from 'react';
-import { ShoppingBasket, Search, ShoppingCart, Globe, Moon, Sun, User, MapPin, ChevronDown } from 'lucide-react';
+import React, { useState } from 'react';
+import { ShoppingBasket, Search, ShoppingCart, Globe, Moon, Sun, User, MapPin, ChevronDown, LogOut } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import { useLanguage, Language } from '@/hooks/useLanguage';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
+import LoginModal from './LoginModal';
 
 interface NavbarProps {
   search: string;
   setSearch: (s: string) => void;
-  onCartClick: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ search, setSearch, onCartClick }) => {
-  const { totalItems } = useCart();
+const Navbar: React.FC<NavbarProps> = ({ search, setSearch }) => {
+  const { totalItems, setIsCartOpen } = useCart();
+  const { user, logout, isAuthenticated } = useAuth();
   const { lang, t, changeLanguage } = useLanguage();
   const { theme, setTheme } = useTheme();
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   return (
     <nav className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50 transition-colors">
@@ -24,11 +27,14 @@ const Navbar: React.FC<NavbarProps> = ({ search, setSearch, onCartClick }) => {
         
         {/* Logo & Address */}
         <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.location.href = '/'}>
-            <div className="bg-orange-500 p-1.5 rounded-lg shadow-sm shadow-orange-200">
+          <div className="flex items-center gap-2 cursor-pointer group" onClick={() => window.location.href = '/'}>
+            <div className="bg-orange-500 p-2 rounded-2xl shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform">
               <ShoppingBasket className="text-white w-6 h-6" />
             </div>
-            <h1 className="text-2xl font-black tracking-tight text-slate-800 dark:text-white hidden md:block">SIMBA</h1>
+            <div className="flex flex-col">
+              <h1 className="text-2xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">SIMBA</h1>
+              <span className="text-[8px] font-black text-orange-500 uppercase tracking-[0.3em] leading-none mt-1">Online</span>
+            </div>
           </div>
 
           {/* Address Selector (Getir Style) */}
@@ -95,7 +101,7 @@ const Navbar: React.FC<NavbarProps> = ({ search, setSearch, onCartClick }) => {
 
           {/* Cart */}
           <button 
-            onClick={onCartClick}
+            onClick={() => setIsCartOpen(true)}
             className="relative p-2 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors"
           >
             <ShoppingCart className="w-6 h-6" />
@@ -107,12 +113,41 @@ const Navbar: React.FC<NavbarProps> = ({ search, setSearch, onCartClick }) => {
           </button>
 
           {/* Profile */}
-          <button className="hidden sm:flex items-center gap-2 bg-slate-800 dark:bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-700 transition-all">
-            <User className="w-4 h-4" />
-            {t.signIn}
-          </button>
+          {isAuthenticated ? (
+            <div className="relative group">
+              <button className="flex items-center gap-2 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-white px-3 md:px-4 py-2 rounded-lg text-sm font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all border dark:border-slate-700">
+                <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-[10px] text-white">
+                  {user?.name.charAt(0)}
+                </div>
+                <span className="hidden md:inline truncate max-w-[100px]">{user?.name.split(' ')[0]}</span>
+                <ChevronDown className="w-3 h-3 text-slate-400" />
+              </button>
+              <div className="absolute top-full right-0 mt-2 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl shadow-2xl py-2 hidden group-hover:block min-w-[160px] overflow-hidden">
+                <div className="px-4 py-2 border-b dark:border-slate-700">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Signed in as</p>
+                  <p className="text-xs font-bold dark:text-white truncate">{user?.email}</p>
+                </div>
+                <button
+                  onClick={logout}
+                  className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors flex items-center gap-2 font-bold"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button 
+              onClick={() => setIsLoginOpen(true)}
+              className="hidden sm:flex items-center gap-2 bg-slate-800 dark:bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-700 transition-all"
+            >
+              <User className="w-4 h-4" />
+              {t.signIn}
+            </button>
+          )}
         </div>
       </div>
+      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </nav>
   );
 };

@@ -4,6 +4,36 @@ import { useState, useEffect } from 'react';
 
 export type Language = 'EN' | 'FR' | 'RW';
 
+const categoryTranslations = {
+  EN: {
+    'Fresh Food': 'Fresh Food',
+    'Food Cupboard': 'Food Cupboard',
+    'Beverages': 'Beverages',
+    'Baby Products': 'Baby Products',
+    'Health & Beauty': 'Health & Beauty',
+    'Household & Cleaning': 'Household & Cleaning',
+    'Electronics & Kitchenware': 'Electronics & Kitchenware',
+  },
+  FR: {
+    'Fresh Food': 'Produits Frais',
+    'Food Cupboard': 'Épicerie',
+    'Beverages': 'Boissons',
+    'Baby Products': 'Produits pour Bébés',
+    'Health & Beauty': 'Santé et Beauté',
+    'Household & Cleaning': 'Maison et Nettoyage',
+    'Electronics & Kitchenware': 'Électronique et Cuisine',
+  },
+  RW: {
+    'Fresh Food': 'Ibiribwa Bishya',
+    'Food Cupboard': 'Ibikenerwa mu Gikoni',
+    'Beverages': 'Ibinyobwa',
+    'Baby Products': 'Iby\'Abana',
+    'Health & Beauty': 'Isuku n\'Ubuzima',
+    'Household & Cleaning': 'Isuku yo mu Rugo',
+    'Electronics & Kitchenware': 'Ibijyanye n\'Ikoranabuhanga',
+  }
+};
+
 const translations = {
   EN: {
     search: "Search products, brands, categories...",
@@ -19,6 +49,7 @@ const translations = {
     popularity: "Popularity",
     lowToHigh: "Price: Low to High",
     highToLow: "Price: High to Low",
+    categoriesList: categoryTranslations.EN,
   },
   FR: {
     search: "Rechercher des produits, marques...",
@@ -34,6 +65,7 @@ const translations = {
     popularity: "Popularité",
     lowToHigh: "Prix: Croissant",
     highToLow: "Prix: Décroissant",
+    categoriesList: categoryTranslations.FR,
   },
   RW: {
     search: "Shaka ibicuruzwa...",
@@ -49,6 +81,7 @@ const translations = {
     popularity: "Ibikunzwe",
     lowToHigh: "Igiciro: Gito",
     highToLow: "Igiciro: Kinini",
+    categoriesList: categoryTranslations.RW,
   }
 };
 

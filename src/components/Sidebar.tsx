@@ -3,7 +3,11 @@
 import React from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
-import { ChevronRight, LayoutGrid, Utensils, Beer, Sparkles, Laptop, Baby, Dumbbell, Home, ShoppingBag } from 'lucide-react';
+import { 
+    ChevronRight, LayoutGrid, Utensils, Beer, Sparkles, Laptop, 
+    Baby, Dumbbell, Home, ShoppingBag, Coffee, Pizza, 
+    Milk, Fish, Beef, Sandwich, Cookie, Droplets
+} from 'lucide-react';
 
 interface SidebarProps {
   categories: string[];
@@ -13,13 +17,13 @@ interface SidebarProps {
 
 const getCategoryIcon = (category: string) => {
     switch (category) {
-        case 'Food Products': return <Utensils className="w-4 h-4" />;
-        case 'Alcoholic Drinks': return <Beer className="w-4 h-4" />;
-        case 'Cosmetics & Personal Care': return <Sparkles className="w-4 h-4" />;
-        case 'Kitchenware & Electronics': return <Laptop className="w-4 h-4" />;
+        case 'Fresh Food': return <Pizza className="w-4 h-4" />;
+        case 'Food Cupboard': return <Utensils className="w-4 h-4" />;
+        case 'Beverages': return <Beer className="w-4 h-4" />;
         case 'Baby Products': return <Baby className="w-4 h-4" />;
-        case 'Sports & Wellness': return <Dumbbell className="w-4 h-4" />;
-        case 'Cleaning & Sanitary': return <Home className="w-4 h-4" />;
+        case 'Health & Beauty': return <Sparkles className="w-4 h-4" />;
+        case 'Household & Cleaning': return <Home className="w-4 h-4" />;
+        case 'Electronics & Kitchenware': return <Laptop className="w-4 h-4" />;
         default: return <ShoppingBag className="w-4 h-4" />;
     }
 };
@@ -64,7 +68,9 @@ const Sidebar: React.FC<SidebarProps> = ({ categories, selectedCategory, onSelec
                 <div className={cn("p-2 rounded-xl transition-colors", selectedCategory === category ? "bg-white/10" : "bg-slate-100 dark:bg-slate-800 group-hover:bg-orange-500 group-hover:text-white")}>
                     {getCategoryIcon(category)}
                 </div>
-                <span className="truncate max-w-[120px]">{category}</span>
+                <span className="truncate max-w-[120px]">
+                    {(t.categoriesList as any)[category] || category}
+                </span>
             </div>
             <ChevronRight className={cn("w-4 h-4 transition-transform group-hover:translate-x-1", selectedCategory === category ? "opacity-100" : "opacity-0")} />
           </button>
@@ -79,7 +85,6 @@ const Sidebar: React.FC<SidebarProps> = ({ categories, selectedCategory, onSelec
             Join Program
           </button>
         </div>
-        {/* Background Decorations */}
         <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
         <div className="absolute top-4 right-4 w-12 h-12 bg-white/5 rounded-lg rotate-12 border border-white/10"></div>
       </div>

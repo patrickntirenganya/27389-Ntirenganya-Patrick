@@ -6,12 +6,11 @@ import { useCart } from '@/context/CartContext';
 import { cn } from '@/lib/utils';
 
 interface BottomNavProps {
-  onCartClick: () => void;
   onSearchClick: () => void;
 }
 
-const BottomNav: React.FC<BottomNavProps> = ({ onCartClick, onSearchClick }) => {
-  const { totalItems } = useCart();
+const BottomNav: React.FC<BottomNavProps> = ({ onSearchClick }) => {
+  const { totalItems, setIsCartOpen } = useCart();
 
   return (
     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50">
@@ -35,7 +34,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ onCartClick, onSearchClick }) => 
 
         <div className="relative -top-8">
             <button 
-                onClick={onCartClick}
+                onClick={() => setIsCartOpen(true)}
                 className="bg-orange-500 text-white p-4 rounded-full shadow-2xl shadow-orange-500/40 border-4 border-slate-50 dark:border-slate-900 transform active:scale-90 transition-transform"
             >
                 <ShoppingBag className="w-6 h-6" />

@@ -52,7 +52,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       
       <div className="space-y-1 flex-1">
         <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.1em] text-orange-600 bg-orange-50 dark:bg-orange-900/20 px-2 py-0.5 rounded">
-          {product.category}
+          {(t.categoriesList as any)[product.category] || product.category}
         </span>
         <Link href={`/product/${product.id}`}>
           <h3 className="font-bold text-slate-800 dark:text-white truncate hover:text-orange-500 transition-colors leading-tight mt-1 text-xs md:text-base">

@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "react-hot-toast";
+import CartContainer from "@/components/CartContainer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,26 +23,29 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} bg-slate-50 dark:bg-slate-900 transition-colors duration-300`}>
         <ThemeProvider attribute="class" defaultTheme="light">
-          <CartProvider>
-            <Toaster 
-              position="bottom-right"
-              toastOptions={{
-                duration: 3000,
-                style: {
-                  background: '#334155',
-                  color: '#fff',
-                  borderRadius: '12px',
-                },
-                success: {
-                  iconTheme: {
-                    primary: '#f97316',
-                    secondary: '#fff',
+          <AuthProvider>
+            <CartProvider>
+              <Toaster 
+                position="bottom-right"
+                toastOptions={{
+                  duration: 3000,
+                  style: {
+                    background: '#334155',
+                    color: '#fff',
+                    borderRadius: '12px',
                   },
-                },
-              }} 
-            />
-            {children}
-          </CartProvider>
+                  success: {
+                    iconTheme: {
+                      primary: '#f97316',
+                      secondary: '#fff',
+                    },
+                  },
+                }} 
+              />
+              {children}
+              <CartContainer />
+            </CartProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

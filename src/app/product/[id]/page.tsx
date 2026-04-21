@@ -4,7 +4,6 @@ import React, { use, useState } from 'react';
 import productsData from '@/data/simba_products.json';
 import { Product } from '@/types';
 import Navbar from '@/components/Navbar';
-import Cart from '@/components/Cart';
 import ProductCard from '@/components/ProductCard';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -20,7 +19,6 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
   const products = productsData.products as Product[];
   const product = products.find(p => p.id === productId);
   
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const [search, setSearch] = useState('');
   const { addToCart } = useCart();
   const { t } = useLanguage();
@@ -57,7 +55,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 transition-colors duration-300">
-      <Navbar search={search} setSearch={setSearch} onCartClick={() => setIsCartOpen(true)} />
+      <Navbar search={search} setSearch={setSearch} />
 
       <main className="max-w-7xl mx-auto px-4 py-8 md:py-12">
         <Link href="/" className="group inline-flex items-center gap-2 text-slate-500 hover:text-orange-500 mb-12 transition-all font-bold uppercase tracking-widest text-[10px]">
@@ -182,8 +180,6 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
             </div>
         )}
       </main>
-
-      <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
       <footer className="bg-slate-900 text-white py-20 mt-32">
         <div className="max-w-7xl mx-auto px-4 text-center">

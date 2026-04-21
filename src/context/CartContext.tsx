@@ -11,12 +11,15 @@ interface CartContextType {
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  isCartOpen: boolean;
+  setIsCartOpen: (isOpen: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   // Load cart from local storage on mount
   useEffect(() => {
@@ -45,6 +48,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
       return [...prev, { ...product, quantity: 1 }];
     });
+    
+    // Pop up and disappear logic
+    setIsCartOpen(true);
+    
+    // Auto-close after 4 seconds
+    const timer = setTimeout(() => {
+      setIsCartOpen(false);
+    }, 4000);
+
+    return () => clearTimeout(timer);
   };
 
   const removeFromCart = (productId: number) => {
@@ -80,6 +93,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         clearCart,
         totalItems,
         totalPrice,
+        isCartOpen,
+        setIsCartOpen,
       }}
     >
       {children}

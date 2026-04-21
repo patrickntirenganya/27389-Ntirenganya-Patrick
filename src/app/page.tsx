@@ -6,8 +6,9 @@ import { Product } from '@/types';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import ProductCard from '@/components/ProductCard';
-import Cart from '@/components/Cart';
 import BottomNav from '@/components/BottomNav';
+import Cart from '@/components/Cart';
+import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/hooks/useLanguage';
 import { SlidersHorizontal, Search, Sparkles, Zap, ShieldCheck, LayoutGrid } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -16,7 +17,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function Home() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { isCartOpen, setIsCartOpen, totalItems } = useCart();
   const [sortBy, setSortBy] = useState('popularity');
   const { t } = useLanguage();
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -51,201 +52,202 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col selection:bg-orange-200 pb-20 lg:pb-0">
+    <div className="min-h-screen flex flex-col selection:bg-orange-200 pb-20 lg:pb-0 relative overflow-x-hidden">
       <Navbar 
         search={search} 
         setSearch={setSearch} 
-        onCartClick={() => setIsCartOpen(true)} 
       />
 
-      <main className="max-w-7xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8 flex-1 w-full">
-        
-        <Sidebar 
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
-        />
+      <main className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
+        {/* Hero Banner - Full Width */}
+        {!search && !selectedCategory && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative rounded-[2.5rem] overflow-hidden mb-12 min-h-[400px] flex flex-col justify-center border border-slate-200 dark:border-slate-800 shadow-2xl"
+          >
+              <div className="absolute inset-0 z-0">
+                  <img 
+                      src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1200" 
+                      alt="Supermarket Background"
+                      className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+              </div>
 
-        <section className="flex-1 min-w-0">
-          
-          {/* Hero Banner */}
-          {!search && !selectedCategory && (
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="relative rounded-[2.5rem] overflow-hidden mb-12 min-h-[400px] flex flex-col justify-center border border-slate-200 dark:border-slate-800 shadow-2xl"
-            >
-                <div className="absolute inset-0 z-0">
-                    <img 
-                        src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1200" 
-                        alt="Supermarket Background"
-                        className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
-                </div>
+              <div className="relative z-10 max-w-xl px-8 md:px-12 py-12 text-white">
+                  <motion.h2 
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="text-4xl md:text-6xl font-black mb-6 leading-[1.1] tracking-tight text-white drop-shadow-sm"
+                  >
+                      Freshness <br/>Delivered to <br/><span className="text-orange-500">Your Door.</span>
+                  </motion.h2>
+                  <motion.p 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.4 }}
+                      className="text-slate-200 text-lg md:text-xl mb-10 font-medium leading-relaxed max-w-md"
+                  >
+                      Shop Rwanda's best groceries, electronics, and daily essentials with instant MoMo checkout.
+                  </motion.p>
+                  <div className="flex flex-wrap gap-4">
+                      <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-2xl font-black transition-all transform active:scale-95 shadow-xl shadow-orange-500/30 flex items-center gap-2 group">
+                          Start Shopping
+                          <Zap className="w-4 h-4 fill-current group-hover:animate-pulse" />
+                      </button>
+                      <button className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-8 py-4 rounded-2xl font-black transition-all transform active:scale-95 border border-white/20">
+                          Our Stores
+                      </button>
+                  </div>
+              </div>
+          </motion.div>
+        )}
 
-                <div className="relative z-10 max-w-xl px-8 md:px-12 py-12 text-white">
-                    <motion.h2 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
-                        className="text-4xl md:text-6xl font-black mb-6 leading-[1.1] tracking-tight text-white drop-shadow-sm"
-                    >
-                        Freshness <br/>Delivered to <br/><span className="text-orange-500">Your Door.</span>
-                    </motion.h2>
-                    <motion.p 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.4 }}
-                        className="text-slate-200 text-lg md:text-xl mb-10 font-medium leading-relaxed max-w-md"
-                    >
-                        Shop Rwanda's best groceries, electronics, and daily essentials with instant MoMo checkout.
-                    </motion.p>
-                    <div className="flex flex-wrap gap-4">
-                        <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-2xl font-black transition-all transform active:scale-95 shadow-xl shadow-orange-500/30 flex items-center gap-2 group">
-                            Start Shopping
-                            <Zap className="w-4 h-4 fill-current group-hover:animate-pulse" />
-                        </button>
-                        <button className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-8 py-4 rounded-2xl font-black transition-all transform active:scale-95 border border-white/20">
-                            Our Stores
-                        </button>
-                    </div>
-                </div>
-            </motion.div>
-          )}
+        {/* Features Bar - Full Width */}
+        {!search && !selectedCategory && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+              <div className="flex items-center gap-4 p-6 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm">
+                  <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center">
+                      <Zap className="w-6 h-6 text-orange-600" />
+                  </div>
+                  <div>
+                      <h4 className="font-bold dark:text-white">Fast Delivery</h4>
+                      <p className="text-xs text-slate-500">Kigali within 2 hours</p>
+                  </div>
+              </div>
+              <div className="flex items-center gap-4 p-6 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm">
+                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center">
+                      <ShieldCheck className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div>
+                      <h4 className="font-bold dark:text-white">Secure MoMo</h4>
+                      <p className="text-xs text-slate-500">100% encrypted payments</p>
+                  </div>
+              </div>
+              <div className="flex items-center gap-4 p-6 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm">
+                  <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center">
+                      <Sparkles className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                      <h4 className="font-bold dark:text-white">Fresh Rewards</h4>
+                      <p className="text-xs text-slate-500">Points on every order</p>
+                  </div>
+              </div>
+          </div>
+        )}
 
-          {/* Features Bar */}
-          {!search && !selectedCategory && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <div className="flex items-center gap-4 p-6 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm">
-                    <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center">
-                        <Zap className="w-6 h-6 text-orange-600" />
-                    </div>
-                    <div>
-                        <h4 className="font-bold dark:text-white">Fast Delivery</h4>
-                        <p className="text-xs text-slate-500">Kigali within 2 hours</p>
-                    </div>
-                </div>
-                <div className="flex items-center gap-4 p-6 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm">
-                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center">
-                        <ShieldCheck className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <div>
-                        <h4 className="font-bold dark:text-white">Secure MoMo</h4>
-                        <p className="text-xs text-slate-500">100% encrypted payments</p>
-                    </div>
-                </div>
-                <div className="flex items-center gap-4 p-6 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm">
-                    <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center">
-                        <Sparkles className="w-6 h-6 text-green-600" />
-                    </div>
-                    <div>
-                        <h4 className="font-bold dark:text-white">Fresh Rewards</h4>
-                        <p className="text-xs text-slate-500">Points on every order</p>
-                    </div>
-                </div>
-            </div>
-          )}
+        <div className="flex flex-col lg:flex-row gap-8">
+          <Sidebar 
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
+          />
 
-          {/* Mobile Category Scroller */}
-          <div className="flex lg:hidden overflow-x-auto pb-4 gap-3 no-scrollbar mb-6 -mx-4 px-4 scroll-smooth">
-            <button 
-              onClick={() => setSelectedCategory(null)}
-              className={cn(
-                "whitespace-nowrap px-6 py-3 rounded-2xl text-sm font-black transition-all flex items-center gap-2 shadow-lg",
-                selectedCategory === null 
-                  ? "bg-slate-900 text-white shadow-slate-200 dark:shadow-none" 
-                  : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700"
-              )}
-            >
-              <LayoutGrid className="w-4 h-4" />
-              {t.allProducts}
-            </button>
-            {categories.map(cat => (
+          <section className="flex-1 min-w-0">
+            {/* Mobile Category Scroller */}
+            <div className="flex lg:hidden overflow-x-auto pb-4 gap-3 no-scrollbar mb-6 -mx-4 px-4 scroll-smooth">
               <button 
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
+                onClick={() => setSelectedCategory(null)}
                 className={cn(
                   "whitespace-nowrap px-6 py-3 rounded-2xl text-sm font-black transition-all flex items-center gap-2 shadow-lg",
-                  selectedCategory === cat 
-                    ? "bg-orange-500 text-white shadow-orange-200" 
+                  selectedCategory === null 
+                    ? "bg-slate-900 text-white shadow-slate-200 dark:shadow-none" 
                     : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700"
                 )}
               >
-                {cat}
+                <LayoutGrid className="w-4 h-4" />
+                {t.allProducts}
               </button>
-            ))}
-          </div>
-
-          {/* Header Controls */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-            <div>
-              <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                {selectedCategory || (search ? `Results for "${search}"` : t.allProducts)}
-              </h2>
-              <p className="text-sm text-slate-500 font-medium mt-1">
-                Showing {filteredProducts.length} items found
-              </p>
+              {categories.map(cat => (
+                <button 
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={cn(
+                    "whitespace-nowrap px-6 py-3 rounded-2xl text-sm font-black transition-all flex items-center gap-2 shadow-lg",
+                    selectedCategory === cat 
+                      ? "bg-orange-500 text-white shadow-orange-200" 
+                      : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700"
+                  )}
+                >
+                  {cat}
+                </button>
+              ))}
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
-                <SlidersHorizontal className="w-4 h-4 text-slate-400" />
-                <span className="text-sm text-slate-500 hidden sm:inline">{t.sortBy}:</span>
-                <select 
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="bg-transparent text-sm font-black border-none focus:ring-0 cursor-pointer dark:text-white outline-none"
-                >
-                  <option value="popularity">{t.popularity}</option>
-                  <option value="lowToHigh">{t.lowToHigh}</option>
-                  <option value="highToLow">{t.highToLow}</option>
-                </select>
+            {/* Header Controls */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+              <div>
+                <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                  {selectedCategory || (search ? `Results for "${search}"` : t.allProducts)}
+                </h2>
+                <p className="text-sm text-slate-500 font-medium mt-1">
+                  Showing {filteredProducts.length} items found
+                </p>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                  <SlidersHorizontal className="w-4 h-4 text-slate-400" />
+                  <span className="text-sm text-slate-500 hidden sm:inline">{t.sortBy}:</span>
+                  <select 
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="bg-transparent text-sm font-black border-none focus:ring-0 cursor-pointer dark:text-white outline-none"
+                  >
+                    <option value="popularity">{t.popularity}</option>
+                    <option value="lowToHigh">{t.lowToHigh}</option>
+                    <option value="highToLow">{t.highToLow}</option>
+                  </select>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Product Grid */}
-          <AnimatePresence mode="popLayout">
-            {filteredProducts.length > 0 ? (
-              <motion.div 
-                layout
-                className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8"
-              >
-                {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </motion.div>
-            ) : (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="py-24 text-center"
-              >
-                <div className="bg-slate-100 dark:bg-slate-800 w-24 h-24 rounded-[2rem] flex items-center justify-center mx-auto mb-6 transform rotate-12">
-                   <Search className="w-10 h-10 text-slate-300" />
-                </div>
-                <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2">No products found</h3>
-                <p className="text-slate-500 font-medium">Try adjusting your search or filters to find what you're looking for.</p>
-                <button 
-                  onClick={() => { setSearch(''); setSelectedCategory(null); }}
-                  className="mt-8 text-orange-500 font-bold hover:underline"
+            {/* Product Grid */}
+            <AnimatePresence mode="popLayout">
+              {filteredProducts.length > 0 ? (
+                <motion.div 
+                  layout
+                  className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8"
                 >
-                  Clear all filters
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </section>
+                  {filteredProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </motion.div>
+              ) : (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="py-24 text-center"
+                >
+                  <div className="bg-slate-100 dark:bg-slate-800 w-24 h-24 rounded-[2rem] flex items-center justify-center mx-auto mb-6 transform rotate-12">
+                    <Search className="w-10 h-10 text-slate-300" />
+                  </div>
+                  <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2">No products found</h3>
+                  <p className="text-slate-500 font-medium">Try adjusting your search or filters to find what you're looking for.</p>
+                  <button 
+                    onClick={() => { setSearch(''); setSelectedCategory(null); }}
+                    className="mt-8 text-orange-500 font-bold hover:underline"
+                  >
+                    Clear all filters
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </section>
+        </div>
+
+        {/* Persistent/Floating Cart Sidebar Overlay */}
+        <aside className={cn(
+          "fixed top-24 right-4 w-80 z-40 transition-all duration-500 ease-in-out hidden lg:block",
+          totalItems > 0 ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
+        )}>
+           <Cart isOpen={true} onClose={() => {}} isInline={true} />
+        </aside>
       </main>
 
-      <Cart 
-        isOpen={isCartOpen} 
-        onClose={() => setIsCartOpen(false)} 
-      />
-
       <BottomNav 
-        onCartClick={() => setIsCartOpen(true)} 
         onSearchClick={focusSearch} 
       />
 
