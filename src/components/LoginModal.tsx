@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { X, Mail, Key, Eye, EyeOff, Lock, Chrome } from 'lucide-react';
+import { X, Mail, Key, Eye, EyeOff, Lock, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
@@ -168,7 +168,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                       <div className="w-5 h-5 border-4 border-slate-900 border-t-transparent rounded-full animate-spin"></div>
                     ) : (
                       <>
-                        <Chrome className="w-5 h-5 text-red-500" />
+                        <Globe className="w-5 h-5 text-red-500" />
                         Google
                       </>
                     )}
