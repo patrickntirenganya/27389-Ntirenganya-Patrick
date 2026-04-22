@@ -6,6 +6,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "react-hot-toast";
 import CartContainer from "@/components/CartContainer";
+import ConversationalSearch from "@/components/ConversationalSearch";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,6 +45,7 @@ export default function RootLayout({
               />
               {children}
               <CartContainer />
+              <ConversationalSearch />
             </CartProvider>
           </AuthProvider>
         </ThemeProvider>

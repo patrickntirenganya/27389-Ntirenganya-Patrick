@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ShoppingBasket, Search, ShoppingCart, Globe, Moon, Sun, User, MapPin, ChevronDown, LogOut } from 'lucide-react';
+import { ShoppingBasket, Search, ShoppingCart, Globe, Moon, Sun, User, MapPin, ChevronDown, LogOut, LayoutDashboard } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage, Language } from '@/hooks/useLanguage';
@@ -127,6 +127,13 @@ const Navbar: React.FC<NavbarProps> = ({ search, setSearch }) => {
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Signed in as</p>
                   <p className="text-xs font-bold dark:text-white truncate">{user?.email}</p>
                 </div>
+                <button
+                  onClick={() => window.location.href = '/dashboard'}
+                  className="w-full text-left px-4 py-3 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 font-bold"
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  Dashboard
+                </button>
                 <button
                   onClick={logout}
                   className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors flex items-center gap-2 font-bold"

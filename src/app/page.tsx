@@ -82,7 +82,7 @@ export default function Home() {
                       transition={{ delay: 0.3 }}
                       className="text-4xl md:text-6xl font-black mb-6 leading-[1.1] tracking-tight text-white drop-shadow-sm"
                   >
-                      Freshness <br/>Delivered to <br/><span className="text-orange-500">Your Door.</span>
+                      {t.heroTitle} <br/><span className="text-orange-500">{t.heroSubtitle}</span>
                   </motion.h2>
                   <motion.p 
                       initial={{ opacity: 0 }}
@@ -90,15 +90,15 @@ export default function Home() {
                       transition={{ delay: 0.4 }}
                       className="text-slate-200 text-lg md:text-xl mb-10 font-medium leading-relaxed max-w-md"
                   >
-                      Shop Rwanda's best groceries, electronics, and daily essentials with instant MoMo checkout.
+                      {t.heroDescription}
                   </motion.p>
                   <div className="flex flex-wrap gap-4">
                       <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-2xl font-black transition-all transform active:scale-95 shadow-xl shadow-orange-500/30 flex items-center gap-2 group">
-                          Start Shopping
+                          {t.startShopping}
                           <Zap className="w-4 h-4 fill-current group-hover:animate-pulse" />
                       </button>
                       <button className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-8 py-4 rounded-2xl font-black transition-all transform active:scale-95 border border-white/20">
-                          Our Stores
+                          {t.ourStores}
                       </button>
                   </div>
               </div>
@@ -113,8 +113,8 @@ export default function Home() {
                       <Zap className="w-6 h-6 text-orange-600" />
                   </div>
                   <div>
-                      <h4 className="font-bold dark:text-white">Fast Delivery</h4>
-                      <p className="text-xs text-slate-500">Kigali within 2 hours</p>
+                      <h4 className="font-bold dark:text-white">{t.fastDelivery}</h4>
+                      <p className="text-xs text-slate-500">{t.fastDeliveryDesc}</p>
                   </div>
               </div>
               <div className="flex items-center gap-4 p-6 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm">
@@ -122,8 +122,8 @@ export default function Home() {
                       <ShieldCheck className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                      <h4 className="font-bold dark:text-white">Secure MoMo</h4>
-                      <p className="text-xs text-slate-500">100% encrypted payments</p>
+                      <h4 className="font-bold dark:text-white">{t.secureMoMo}</h4>
+                      <p className="text-xs text-slate-500">{t.secureMoMoDesc}</p>
                   </div>
               </div>
               <div className="flex items-center gap-4 p-6 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm">
@@ -131,8 +131,8 @@ export default function Home() {
                       <Sparkles className="w-6 h-6 text-green-600" />
                   </div>
                   <div>
-                      <h4 className="font-bold dark:text-white">Fresh Rewards</h4>
-                      <p className="text-xs text-slate-500">Points on every order</p>
+                      <h4 className="font-bold dark:text-white">{t.freshProducts}</h4>
+                      <p className="text-xs text-slate-500">{t.freshProductsDesc}</p>
                   </div>
               </div>
           </div>

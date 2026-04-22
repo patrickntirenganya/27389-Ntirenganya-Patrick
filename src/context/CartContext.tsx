@@ -49,15 +49,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return [...prev, { ...product, quantity: 1 }];
     });
     
-    // Pop up and disappear logic
     setIsCartOpen(true);
-    
-    // Auto-close after 4 seconds
-    const timer = setTimeout(() => {
-      setIsCartOpen(false);
-    }, 4000);
-
-    return () => clearTimeout(timer);
   };
 
   const removeFromCart = (productId: number) => {
