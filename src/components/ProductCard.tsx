@@ -16,16 +16,16 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { cart, addToCart, updateQuantity } = useCart();
-  const { t } = useLanguage();
+  const { t, translateProduct } = useLanguage();
 
   const cartItem = cart.find(item => item.id === product.id);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     addToCart(product);
-    toast.success(`${product.name} added!`, {
+    toast.success(`${translateProduct(product.name)} added!`, {
       icon: '🛒',
-      id: `add-${product.id}` // Prevent multiple toasts for same item
+      id: `add-${product.id}` 
     });
   };
 
@@ -52,18 +52,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       
       <div className="space-y-1 flex-1">
         <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.1em] text-orange-600 bg-orange-50 dark:bg-orange-900/20 px-2 py-0.5 rounded">
-          {(t.categoriesList as any)[product.category] || product.category}
+          {translateProduct(product.category)}
         </span>
         <Link href={`/product/${product.id}`}>
           <h3 className="font-bold text-slate-800 dark:text-white truncate hover:text-orange-500 transition-colors leading-tight mt-1 text-xs md:text-base">
-            {product.name}
+            {translateProduct(product.name)}
           </h3>
         </Link>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mt-1 md:mt-2">
             <p className="text-sm md:text-lg font-black text-slate-900 dark:text-slate-100">
             {formatPrice(product.price)}
             </p>
-            <span className="text-[8px] md:text-[10px] text-slate-400 font-medium">{product.unit}</span>
+            <span className="text-[8px] md:text-[10px] text-slate-400 font-medium">{translateProduct(product.unit)}</span>
         </div>
       </div>
 

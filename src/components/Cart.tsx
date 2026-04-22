@@ -17,7 +17,7 @@ interface CartProps {
 
 const Cart: React.FC<CartProps> = ({ isOpen, onClose, isInline = false }) => {
   const { cart, updateQuantity, removeFromCart, totalPrice, totalItems } = useCart();
-  const { t } = useLanguage();
+  const { t, translateProduct } = useLanguage();
 
   if (isInline) {
     return (
@@ -30,7 +30,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, isInline = false }) => {
             </div>
             <div>
                 <h2 className="text-xl font-black dark:text-white leading-tight">{t.cart}</h2>
-                <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">{totalItems} Items</p>
+                <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">{totalItems} {t.items}</p>
             </div>
           </div>
         </div>
@@ -40,7 +40,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, isInline = false }) => {
           {cart.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-4 py-12">
               <ShoppingBag className="w-12 h-12 opacity-20" />
-              <p className="font-bold text-sm">Your cart is empty</p>
+              <p className="font-bold text-sm">{t.noProducts}</p>
             </div>
           ) : (
             cart.map((item) => (
@@ -49,7 +49,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, isInline = false }) => {
                   <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex-1 min-w-0 flex flex-col justify-between">
-                  <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate">{item.name}</h4>
+                  <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate">{translateProduct(item.name)}</h4>
                   <div className="flex items-center justify-between">
                     <span className="text-orange-600 font-black text-xs">{formatPrice(item.price)}</span>
                     <div className="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-0.5 border dark:border-slate-700 scale-90 origin-right">
@@ -68,7 +68,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, isInline = false }) => {
         {cart.length > 0 && (
           <div className="p-6 border-t dark:border-slate-800 bg-slate-50 dark:bg-slate-900 space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-black dark:text-white">Total</span>
+              <span className="text-sm font-black dark:text-white">{t.total}</span>
               <span className="text-xl font-black text-orange-600">{formatPrice(totalPrice)}</span>
             </div>
             <Link 
@@ -113,7 +113,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, isInline = false }) => {
                 </div>
                 <div>
                     <h2 className="text-xl font-black dark:text-white leading-tight">{t.cart}</h2>
-                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">{totalItems} Items selected</p>
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">{totalItems} {t.items}</p>
                 </div>
               </div>
               <button 
@@ -137,14 +137,13 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, isInline = false }) => {
                             <ShoppingBag className="w-12 h-12 opacity-20" />
                         </div>
                         <div className="text-center">
-                            <p className="font-bold text-slate-800 dark:text-white text-lg">Your cart is lonely</p>
-                            <p className="text-sm font-medium">Add some items to start shopping!</p>
+                            <p className="font-bold text-slate-800 dark:text-white text-lg">{t.noProducts}</p>
                         </div>
                         <button 
                             onClick={onClose}
                             className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-3 rounded-2xl font-bold hover:bg-orange-500 transition-colors"
                         >
-                            Explore Products
+                            {t.startShopping}
                         </button>
                     </motion.div>
                 ) : (
@@ -163,7 +162,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, isInline = false }) => {
                         <div className="flex-1 min-w-0 flex flex-col justify-between">
                         <div>
                             <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 truncate mb-1">
-                                {item.name}
+                                {translateProduct(item.name)}
                             </h4>
                             <p className="text-orange-600 font-black text-sm">
                                 {formatPrice(item.price)}
@@ -204,15 +203,15 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, isInline = false }) => {
               <div className="p-8 border-t dark:border-slate-800 bg-slate-50 dark:bg-slate-900 space-y-6">
                 <div className="space-y-3">
                     <div className="flex justify-between items-center text-slate-500 text-sm font-bold uppercase tracking-widest">
-                    <span>Subtotal</span>
+                    <span>{t.subtotal}</span>
                     <span className="text-slate-900 dark:text-white">{formatPrice(totalPrice)}</span>
                     </div>
                     <div className="flex justify-between items-center text-slate-500 text-sm font-bold uppercase tracking-widest">
-                    <span>Delivery</span>
+                    <span>{t.delivery}</span>
                     <span className="text-green-500 font-black">FREE</span>
                     </div>
                     <div className="flex justify-between items-center pt-2">
-                    <span className="text-xl font-black dark:text-white">Total</span>
+                    <span className="text-xl font-black dark:text-white">{t.total}</span>
                     <span className="text-3xl font-black text-orange-600">{formatPrice(totalPrice)}</span>
                     </div>
                 </div>

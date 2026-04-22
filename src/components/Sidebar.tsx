@@ -5,8 +5,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 import { 
     ChevronRight, LayoutGrid, Utensils, Beer, Sparkles, Laptop, 
-    Baby, Dumbbell, Home, ShoppingBag, Coffee, Pizza, 
-    Milk, Fish, Beef, Sandwich, Cookie, Droplets
+    Baby, Home, ShoppingBag, Pizza 
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -29,7 +28,7 @@ const getCategoryIcon = (category: string) => {
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ categories, selectedCategory, onSelectCategory }) => {
-  const { t } = useLanguage();
+  const { t, translateProduct } = useLanguage();
 
   return (
     <aside className="w-64 flex-shrink-0 hidden lg:block sticky top-24 h-[calc(100vh-8rem)] overflow-y-auto pr-4 custom-scroll">
@@ -69,7 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({ categories, selectedCategory, onSelec
                     {getCategoryIcon(category)}
                 </div>
                 <span className="truncate max-w-[120px]">
-                    {(t.categoriesList as any)[category] || category}
+                    {translateProduct(category)}
                 </span>
             </div>
             <ChevronRight className={cn("w-4 h-4 transition-transform group-hover:translate-x-1", selectedCategory === category ? "opacity-100" : "opacity-0")} />

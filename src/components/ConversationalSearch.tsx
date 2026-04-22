@@ -7,6 +7,7 @@ import { Product } from '@/types';
 import productsData from '@/data/simba_products.json';
 import { formatPrice, cn } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
+import { useLanguage } from '@/hooks/useLanguage';
 import toast from 'react-hot-toast';
 
 interface Message {
@@ -24,6 +25,7 @@ export default function ConversationalSearch() {
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { addToCart } = useCart();
+  const { translateProduct, lang } = useLanguage();
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -41,16 +43,13 @@ export default function ConversationalSearch() {
     setIsLoading(true);
 
     try {
-      // In a real app, this would call Groq API
-      // Here we simulate the AI logic
       const products = productsData.products as Product[];
       
-      // Simple keyword matching for demo
       const matchedProducts = products.filter(p => 
         userMessage.toLowerCase().split(' ').some(word => 
           word.length > 2 && (
-            p.name.toLowerCase().includes(word) || 
-            p.category.toLowerCase().includes(word) ||
+            translateProduct(p.name).toLowerCase().includes(word) || 
+            translateProduct(p.category).toLowerCase().includes(word) ||
             p.description?.toLowerCase().includes(word)
           )
         )
@@ -59,9 +58,14 @@ export default function ConversationalSearch() {
       setTimeout(() => {
         let response = "";
         if (matchedProducts.length > 0) {
-          response = `I found some ${matchedProducts[0].category.toLowerCase()} items that might match what you're looking for:`;
+          const cat = translateProduct(matchedProducts[0].category).toLowerCase();
+          if (lang === 'FR') response = `J'ai trouvé quelques articles de ${cat} qui pourraient correspondre à ce que vous cherchez :`;
+          else if (lang === 'RW') response = `Nabonye ibintu bya ${cat} bishobora kuba bijyanye n'ibyo ushaka :`;
+          else response = `I found some ${cat} items that might match what you're looking for:`;
         } else {
-          response = "I couldn't find exactly that, but here are some popular items at Simba right now!";
+          if (lang === 'FR') response = "Je n'ai pas trouvé exactement cela, mais voici quelques articles populaires chez Simba en ce moment !";
+          else if (lang === 'RW') response = "Ntabwo nabonye neza ibyo ushaka, ariko dore bimwe mu bintu bikunzwe muri Simba ubu!";
+          else response = "I couldn't find exactly that, but here are some popular items at Simba right now!";
           matchedProducts.push(...products.slice(0, 2));
         }
 
@@ -144,7 +148,7 @@ export default function ConversationalSearch() {
                               <img src={p.image} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-xs font-bold dark:text-white truncate">{p.name}</p>
+                              <p className="text-xs font-bold dark:text-white truncate">{translateProduct(p.name)}</p>
                               <p className="text-[10px] text-orange-500 font-black mt-1">{formatPrice(p.price)}</p>
                               <button 
                                 onClick={() => addToCart(p)}
