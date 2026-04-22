@@ -51,7 +51,7 @@ export default function ConversationalSearch() {
           word.length > 2 && (
             p.name.toLowerCase().includes(word) || 
             p.category.toLowerCase().includes(word) ||
-            p.description.toLowerCase().includes(word)
+            p.description?.toLowerCase().includes(word)
           )
         )
       ).slice(0, 3);

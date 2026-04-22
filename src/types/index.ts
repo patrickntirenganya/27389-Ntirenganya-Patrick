@@ -7,6 +7,7 @@ export interface Product {
   inStock: boolean;
   image: string;
   unit: string;
+  description?: string;
 }
 
 export interface StoreData {
