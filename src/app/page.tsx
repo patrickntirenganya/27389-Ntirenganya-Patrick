@@ -13,10 +13,24 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { 
   SlidersHorizontal, Search, Zap, ShieldCheck, 
   LayoutGrid, ArrowRight, Download, Smartphone,
-  Star, Clock, ChevronRight
+  Star, Clock, ChevronRight, Utensils, Beer, 
+  Sparkles, Laptop, Baby, Home as HomeIcon, Pizza
 } from 'lucide-react';
 import { cn, formatPrice } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const getCategoryIcon = (category: string) => {
+    switch (category) {
+        case 'Fresh Food': return <Pizza className="w-8 h-8" />;
+        case 'Food Cupboard': return <Utensils className="w-8 h-8" />;
+        case 'Beverages': return <Beer className="w-8 h-8" />;
+        case 'Baby Products': return <Baby className="w-8 h-8" />;
+        case 'Health & Beauty': return <Sparkles className="w-8 h-8" />;
+        case 'Household & Cleaning': return <HomeIcon className="w-8 h-8" />;
+        case 'Electronics & Kitchenware': return <Laptop className="w-8 h-8" />;
+        default: return <Zap className="w-8 h-8" />;
+    }
+};
 
 export default function Home() {
   const [search, setSearch] = useState('');
@@ -36,44 +50,20 @@ export default function Home() {
     return Array.from(new Set(products.map((p) => p.category))).sort();
   }, [products]);
 
-  const groupedProducts = useMemo(() => {
-    const grouped: Record<string, Product[]> = {};
-    
-    products.forEach(p => {
-      if (!grouped[p.category]) grouped[p.category] = [];
-      grouped[p.category].push(p);
-    });
-
-    // Apply sorting to each group
-    Object.keys(grouped).forEach(cat => {
-      grouped[cat].sort((a, b) => {
-        if (sortBy === 'lowToHigh') return a.price - b.price;
-        if (sortBy === 'highToLow') return b.price - a.price;
-        return 0;
-      });
-    });
-
-    return grouped;
-  }, [products, sortBy]);
-
-  const filteredGroups = useMemo(() => {
-    const result: Record<string, Product[]> = {};
-    
-    Object.entries(groupedProducts).forEach(([cat, items]) => {
-      const filtered = items.filter(p => {
+  const filteredProducts = useMemo(() => {
+    return products
+      .filter((p) => {
         const matchesSearch = translateProduct(p.name).toLowerCase().includes(search.toLowerCase()) ||
                              translateProduct(p.category).toLowerCase().includes(search.toLowerCase());
         const matchesCategory = selectedCategory ? p.category === selectedCategory : true;
         return matchesSearch && matchesCategory;
+      })
+      .sort((a, b) => {
+        if (sortBy === 'lowToHigh') return a.price - b.price;
+        if (sortBy === 'highToLow') return b.price - a.price;
+        return 0;
       });
-
-      if (filtered.length > 0) {
-        result[cat] = filtered;
-      }
-    });
-
-    return result;
-  }, [groupedProducts, search, selectedCategory, translateProduct, lang]);
+  }, [products, search, selectedCategory, translateProduct, lang, sortBy]);
 
   const focusSearch = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -85,6 +75,8 @@ export default function Home() {
 
   if (!isClient) return null;
 
+  const isBrowsing = !search && !selectedCategory;
+
   return (
     <div className="min-h-screen flex flex-col selection:bg-orange-200 pb-20 lg:pb-0 relative overflow-x-hidden bg-[#FAFAFA] dark:bg-slate-950">
       <Navbar 
@@ -93,9 +85,8 @@ export default function Home() {
       />
 
       {/* Getir Style Hero Section */}
-      {!search && !selectedCategory && (
+      {isBrowsing && (
         <div className="relative bg-[#5d3ebc] overflow-hidden">
-          {/* Animated background blobs */}
           <div className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
             <div className="absolute -top-24 -left-24 w-96 h-96 bg-orange-500 rounded-full blur-[100px] animate-pulse"></div>
             <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-blue-400 rounded-full blur-[100px] animate-pulse delay-700"></div>
@@ -131,7 +122,7 @@ export default function Home() {
               <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                 <button 
                   onClick={() => {
-                    const el = document.getElementById('products-section');
+                    const el = document.getElementById('categories-grid');
                     el?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-xl font-black transition-all transform active:scale-95 shadow-xl shadow-orange-500/20 flex items-center gap-3 group"
@@ -139,17 +130,13 @@ export default function Home() {
                   {t.startShopping}
                   <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
-                <button className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-10 py-4 rounded-xl font-black transition-all border border-white/20 flex items-center gap-3">
-                  <Smartphone className="w-5 h-5" />
-                  {t.ourStores}
-                </button>
               </div>
             </div>
 
             <motion.div 
-              initial={{ opacity: 0, scale: 0.8, rotate: 5 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{ delay: 0.4, type: 'spring' }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4 }}
               className="hidden md:block flex-1"
             >
               <div className="relative">
@@ -158,51 +145,13 @@ export default function Home() {
                   alt="Simba Delivery"
                   className="rounded-[3rem] shadow-2xl border-8 border-white/10"
                 />
-                <div className="absolute -bottom-10 -left-10 bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-2xl flex items-center gap-4 border border-slate-100 dark:border-slate-700">
-                  <div className="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center">
-                    <Clock className="w-6 h-6 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Fastest in Kigali</p>
-                    <p className="text-lg font-black dark:text-white">45 Minutes</p>
-                  </div>
-                </div>
               </div>
             </motion.div>
           </div>
         </div>
       )}
 
-      {/* Feature Section (Getir Style) */}
-      {!search && !selectedCategory && (
-        <div className="bg-white dark:bg-slate-900 py-12 border-b dark:border-slate-800">
-          <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
-             <div className="flex flex-col items-center text-center gap-4">
-                <div className="w-16 h-16 bg-orange-50 dark:bg-orange-900/20 rounded-2xl flex items-center justify-center">
-                  <Zap className="w-8 h-8 text-orange-500" />
-                </div>
-                <h3 className="text-xl font-black dark:text-white">{t.fastDelivery}</h3>
-                <p className="text-slate-500 text-sm max-w-xs">{t.fastDeliveryDesc}</p>
-             </div>
-             <div className="flex flex-col items-center text-center gap-4">
-                <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center">
-                  <ShieldCheck className="w-8 h-8 text-blue-500" />
-                </div>
-                <h3 className="text-xl font-black dark:text-white">{t.secureMoMo}</h3>
-                <p className="text-slate-500 text-sm max-w-xs">{t.secureMoMoDesc}</p>
-             </div>
-             <div className="flex flex-col items-center text-center gap-4">
-                <div className="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-2xl flex items-center justify-center">
-                  <Star className="w-8 h-8 text-green-500" />
-                </div>
-                <h3 className="text-xl font-black dark:text-white">{t.freshProducts}</h3>
-                <p className="text-slate-500 text-sm max-w-xs">{t.freshProductsDesc}</p>
-             </div>
-          </div>
-        </div>
-      )}
-
-      <main id="products-section" className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
+      <main className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full min-h-[60vh]">
         <div className="flex flex-col lg:flex-row gap-8">
           <Sidebar 
             categories={categories}
@@ -211,89 +160,130 @@ export default function Home() {
           />
 
           <section className="flex-1 min-w-0">
-            {/* Header Controls */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-              <div>
-                <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                  {selectedCategory ? translateProduct(selectedCategory) : (search ? `Results for "${search}"` : t.allProducts)}
-                </h2>
-                <p className="text-sm text-slate-500 font-medium mt-1 uppercase tracking-widest font-black">
-                  {Object.values(filteredGroups).flat().length} {t.items}
-                </p>
-              </div>
+            {isBrowsing ? (
+              <div id="categories-grid" className="space-y-12 py-8">
+                 <div className="text-center md:text-left">
+                    <h2 className="text-3xl font-black dark:text-white mb-2">{t.categories}</h2>
+                    <p className="text-slate-500 font-medium">Select a category to start shopping</p>
+                 </div>
+                 
+                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {categories.map(cat => (
+                      <motion.button
+                        key={cat}
+                        whileHover={{ y: -5 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setSelectedCategory(cat)}
+                        className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-orange-500/50 transition-all flex flex-col items-center gap-6 group text-center"
+                      >
+                        <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800 rounded-3xl flex items-center justify-center text-slate-400 group-hover:bg-orange-500 group-hover:text-white transition-colors duration-500 shadow-inner">
+                           {getCategoryIcon(cat)}
+                        </div>
+                        <span className="font-black text-sm dark:text-white uppercase tracking-widest">{translateProduct(cat)}</span>
+                      </motion.button>
+                    ))}
+                 </div>
 
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
-                  <SlidersHorizontal className="w-4 h-4 text-slate-400" />
-                  <span className="text-sm text-slate-500 hidden sm:inline">{t.sortBy}:</span>
-                  <select 
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="bg-transparent text-sm font-black border-none focus:ring-0 cursor-pointer dark:text-white outline-none"
-                  >
-                    <option value="popularity">{t.popularity}</option>
-                    <option value="lowToHigh">{t.lowToHigh}</option>
-                    <option value="highToLow">{t.highToLow}</option>
-                  </select>
-                </div>
+                 {/* Featured Trust Banner */}
+                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12">
+                    <div className="p-8 bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 flex items-center gap-6">
+                       <div className="w-14 h-14 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center text-orange-600">
+                          <Clock className="w-8 h-8" />
+                       </div>
+                       <div>
+                          <h4 className="font-black dark:text-white uppercase tracking-tight">{t.fastDelivery}</h4>
+                          <p className="text-xs text-slate-500 font-bold">{t.fastDeliveryDesc}</p>
+                       </div>
+                    </div>
+                    <div className="p-8 bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 flex items-center gap-6">
+                       <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center text-blue-600">
+                          <ShieldCheck className="w-8 h-8" />
+                       </div>
+                       <div>
+                          <h4 className="font-black dark:text-white uppercase tracking-tight">{t.secureMoMo}</h4>
+                          <p className="text-xs text-slate-500 font-bold">{t.secureMoMoDesc}</p>
+                       </div>
+                    </div>
+                    <div className="p-8 bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 flex items-center gap-6">
+                       <div className="w-14 h-14 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center text-green-600">
+                          <Star className="w-8 h-8" />
+                       </div>
+                       <div>
+                          <h4 className="font-black dark:text-white uppercase tracking-tight">{t.freshProducts}</h4>
+                          <p className="text-xs text-slate-500 font-bold">{t.freshProductsDesc}</p>
+                       </div>
+                    </div>
+                 </div>
               </div>
-            </div>
-
-            {/* Grouped Product Grid */}
-            <AnimatePresence mode="popLayout">
-              {Object.keys(filteredGroups).length > 0 ? (
-                <div className="space-y-16">
-                  {Object.entries(filteredGroups).map(([cat, items]) => (
-                    <motion.div 
-                      key={cat} 
-                      layout
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="space-y-6"
-                    >
-                      <div className="flex items-center justify-between border-l-4 border-orange-500 pl-4">
-                        <h3 className="text-xl font-black dark:text-white uppercase tracking-tight">
-                          {translateProduct(cat)}
-                        </h3>
-                        {!selectedCategory && (
-                          <button 
-                            onClick={() => setSelectedCategory(cat)}
-                            className="text-sm font-black text-orange-500 hover:underline flex items-center gap-1 uppercase tracking-widest"
-                          >
-                            {t.viewAll}
-                            <ArrowRight className="w-4 h-4" />
-                          </button>
-                        )}
-                      </div>
-                      
-                      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8">
-                        {(selectedCategory ? items : items.slice(0, 8)).map((product) => (
-                          <ProductCard key={product.id} product={product} />
-                        ))}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              ) : (
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="py-24 text-center"
-                >
-                  <div className="bg-slate-100 dark:bg-slate-800 w-24 h-24 rounded-[2rem] flex items-center justify-center mx-auto mb-6 transform rotate-12">
-                    <Search className="w-10 h-10 text-slate-300" />
+            ) : (
+              <div className="space-y-8 py-8">
+                {/* Header Controls */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                        <button 
+                            onClick={() => {setSelectedCategory(null); setSearch('');}}
+                            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-slate-400"
+                        >
+                            <ChevronRight className="w-5 h-5 rotate-180" />
+                        </button>
+                        <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                            {selectedCategory ? translateProduct(selectedCategory) : `Search: ${search}`}
+                        </h2>
+                    </div>
+                    <p className="text-sm text-slate-500 font-medium uppercase tracking-widest font-black ml-10">
+                      {filteredProducts.length} {t.items} Found
+                    </p>
                   </div>
-                  <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2">{t.noProducts}</h3>
-                  <p className="text-slate-500 font-medium">Try adjusting your search or filters to find what you're looking for.</p>
-                  <button 
-                    onClick={() => { setSearch(''); setSelectedCategory(null); }}
-                    className="mt-8 text-orange-500 font-bold hover:underline uppercase tracking-widest text-sm"
-                  >
-                    Clear all filters
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
+
+                  <div className="flex items-center gap-4 ml-10 md:ml-0">
+                    <div className="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                      <SlidersHorizontal className="w-4 h-4 text-slate-400" />
+                      <select 
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="bg-transparent text-sm font-black border-none focus:ring-0 cursor-pointer dark:text-white outline-none"
+                      >
+                        <option value="popularity">{t.popularity}</option>
+                        <option value="lowToHigh">{t.lowToHigh}</option>
+                        <option value="highToLow">{t.highToLow}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Product Grid */}
+                <AnimatePresence mode="popLayout">
+                  {filteredProducts.length > 0 ? (
+                    <motion.div 
+                      layout
+                      className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8"
+                    >
+                      {filteredProducts.map((product) => (
+                        <ProductCard key={product.id} product={product} />
+                      ))}
+                    </motion.div>
+                  ) : (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="py-24 text-center"
+                    >
+                      <div className="bg-slate-100 dark:bg-slate-800 w-24 h-24 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6">
+                        <Search className="w-10 h-10 text-slate-300" />
+                      </div>
+                      <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2">{t.noProducts}</h3>
+                      <button 
+                        onClick={() => { setSearch(''); setSelectedCategory(null); }}
+                        className="mt-8 text-orange-500 font-bold hover:underline uppercase tracking-widest text-sm"
+                      >
+                        Back to Categories
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
           </section>
         </div>
 
@@ -306,9 +296,7 @@ export default function Home() {
         </aside>
       </main>
 
-      <BottomNav 
-        onSearchClick={focusSearch} 
-      />
+      <BottomNav onSearchClick={focusSearch} />
 
       <footer className="bg-[#5d3ebc] text-white py-20 mt-20 relative overflow-hidden">
         <div className="absolute top-0 right-0 opacity-10">
@@ -327,7 +315,6 @@ export default function Home() {
             <ul className="space-y-4 text-white/60 text-sm font-bold">
                 <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Store Locations</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Delivery Areas</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Contact Support</a></li>
             </ul>
           </div>
@@ -339,13 +326,6 @@ export default function Home() {
                   <div className="text-left">
                     <p className="text-[10px] font-black uppercase opacity-60">Get it on</p>
                     <p className="text-sm font-black">Google Play</p>
-                  </div>
-               </button>
-               <button className="bg-black/20 hover:bg-black/40 p-4 rounded-xl border border-white/10 flex items-center gap-4 transition-all">
-                  <Download className="w-6 h-6" />
-                  <div className="text-left">
-                    <p className="text-[10px] font-black uppercase opacity-60">Download on</p>
-                    <p className="text-sm font-black">App Store</p>
                   </div>
                </button>
             </div>
